@@ -1,5 +1,5 @@
 #from helpers.criteria_checker import check_criteria
-from helpers.utils import get_urls, get_urls_info, get_submission_body, check_if_banned
+from helpers.utils import get_urls, get_urls_info
 from helpers.utils import check_if_amp
 
 def generate_message(links):
@@ -34,7 +34,7 @@ def generate_message(links):
 
     return None
 
-def generate_reply(message):
+def get_reply(message):
     if not check_if_amp(message):
         return message
     urls = get_urls(message)

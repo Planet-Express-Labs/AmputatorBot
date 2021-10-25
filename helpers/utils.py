@@ -19,15 +19,6 @@ from static import static
 
 log = logger.get_log(sys)
 
-
-# Get the body of the submission
-def get_submission_body(submission):
-    if submission.selftext != "":
-        return submission.selftext
-    else:
-        return submission.url
-
-
 # Get all the URLs from the body
 def get_urls(body):
     # Set up an extractor to extract the URLs
