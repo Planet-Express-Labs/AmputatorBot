@@ -1,44 +1,8 @@
-import sys
+#from helpers.criteria_checker import check_criteria
+from helpers.utils import get_urls, get_urls_info, get_submission_body, check_if_banned
+from helpers.utils import check_if_amp
 
-from helpers import logger
-from helpers.utils import check_if_cached
-
-log = logger.get_log(sys)
-
-
-# Check if the tweet is a retweet (either official or non-official)
-def check_if_retweet(tweet, body):
-    if hasattr(tweet, 'retweeted_status') or "RT @" in body:
-        return True
-
-    return False
-
-
-# Get all URLs of the tweet that are cached
-def get_cached_tweet_urls(tweet):
-    try:
-        urls = tweet.entities['urls']
-        expanded_urls = []
-        for url in urls:
-            expended_url = url['expanded_url']
-            if check_if_cached(expended_url):
-                expanded_urls.append(expended_url)
-        return expanded_urls
-    except AttributeError:
-        return None
-
-
-# Get the screen_name of the author of the tweet
-def get_twitterer_name(tweet):
-    try:
-        return tweet.author.screen_name
-    except AttributeError:
-        log.info(f"Couldn't get user screen_name of tweet {tweet.id}")
-        return None
-
-
-# Generate a reply tweet
-def generate_tweet(links):
+def generate_message(links):
     # Initialize all variables
     canonical_text_latest, canonical_text_list, canonical_text = "", "", ""
     n_canonicals = 0
@@ -55,7 +19,7 @@ def generate_tweet(links):
         if n_canonicals == 1:
             intro_who_wat = "It looks like you shared a cached AMP link. These should load faster, but Google's " \
                             "AMP is controversial because of concerns over privacy and the Open Web: " \
-                            "reddit.com/r/AmputatorBot/comments/ehrq3z/why_did_i_build_amputatorbot/ "
+                            "https://reddit.com/r/AmputatorBot/comments/ehrq3z/why_did_i_build_amputatorbot/ "
             intro_maybe = "\n\nYou might want to visit the uncached page instead: "
             canonical_text = canonical_text_latest
 
@@ -68,5 +32,25 @@ def generate_tweet(links):
 
         return tweet_text
 
-    log.warning("Couldn't generate reply")
     return None
+
+def generate_reply(message):
+    if not check_if_amp(message):
+        return message
+    urls = get_urls(message)
+    links = get_urls_info(urls)
+
+    if any(link.is_amp for link in links):
+        return generate_message(links)
+
+def get_replacement_array(message):
+    if not check_if_amp(message):
+        return []
+    
+    urls = get_urls(message)
+    links = get_urls_info(urls)
+    array=[]
+    for link in links:
+        if link.canonical:
+            array.append((link.url, link.canonical))
+    return array

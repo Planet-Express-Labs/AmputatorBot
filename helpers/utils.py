@@ -7,8 +7,6 @@ import requests
 import validators
 from bs4 import BeautifulSoup
 from newspaper import ArticleException, Article
-from praw.exceptions import RedditAPIException
-from prawcore import Forbidden, NotFound
 from tldextract import tldextract
 from urlextract import URLExtract
 from validators import ValidationFailure
@@ -276,20 +274,3 @@ def get_article_similarity(url1, url2, log_articles=False):
         log.error(traceback.format_exc())
         log.warning("Couldn't compare articles")
         return None
-
-
-# Check if AmputatorBot is banned in subreddit X
-def check_if_banned(subreddit):
-    try:
-        if subreddit.user_is_banned:
-            log.info(f"Ban by r/{subreddit} has been validated")
-            return True
-
-        else:
-            log.warning("Couldn't validate ban, user isn't banned!")
-            return False
-
-    except (Forbidden, NotFound, RedditAPIException, Exception):
-        log.error(traceback.format_exc())
-        log.warning("Couldn't validate ban, an error was raised!")
-        return False

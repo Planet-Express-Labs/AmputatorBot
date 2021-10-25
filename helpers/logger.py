@@ -2,7 +2,6 @@ import logging
 import os
 import traceback
 
-from datahandlers.local_datahandler import get_data_by_filename as get_data
 from static import static
 
 
@@ -36,7 +35,7 @@ def get_filename(sys):
 # Get the path of the logging file
 def get_logging_path(filename):
     try:
-        logging_path = get_data(filename, is_log=True, return_path_only=True)
+        logging_path = "logs/log.txt"
         return logging_path
     except (ValueError, Exception):
         logging.error(traceback.format_exc())
