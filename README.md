@@ -12,4 +12,5 @@ Support Planet Express Labs:
    - BTC - 1HMC5hbPq1sgExh2m7j8dMfd3qebZJu12X
    - BCH - bitcoincash:qze4898dlglnjf2nngqv4fplx8rqv2f5cc22mjgkz6
    - USDT -  0x540d5C00e8Ab7e16ab8Fe1a9417CA2963388FDCd
+
 Your support is very appreciated, but it will never be required. 
